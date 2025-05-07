@@ -44,7 +44,28 @@
     border-radius: 0;
     text-shadow: 0 0 5px #004d40;
     user-select: text;
+    position: relative;
   }
+  /* Menu toggle button for mobile */
+  #menuToggle {
+    display: none;
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    width: 32px;
+    height: 28px;
+    cursor: pointer;
+    z-index: 30;
+  }
+  #menuToggle div {
+    width: 32px;
+    height: 4px;
+    background-color: #a3d7ca;
+    margin: 5px 0;
+    border-radius: 2px;
+    transition: 0.4s;
+  }
+
   /* Navigation tabs */
   nav {
     display: flex;
@@ -54,6 +75,7 @@
     border-bottom: 3px solid #a5d6a7;
     user-select: none;
     flex-shrink: 0;
+    transition: transform 0.3s ease;
   }
   nav button {
     flex: 1;
@@ -288,23 +310,40 @@
     text-shadow: 0 0 2px #002d26;
   }
 
-  /* Responsive: enhanced for mobile */
+  /* Responsive: enhanced for mobile with menu toggle */
   @media (max-width: 600px) {
-    header {
-      font-size: 1.4rem;
-      padding: 14px 16px;
+    #menuToggle {
+      display: block;
     }
     nav {
-      font-size: 0.9rem;
-      flex-wrap: wrap;
+      position: fixed;
+      top: 56px;
+      right: 0;
+      height: calc(100% - 56px);
+      width: 220px;
+      background: #00796b;
+      flex-direction: column;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      box-shadow: -3px 0 12px rgba(0,0,0,0.5);
+      z-index: 40;
+      border-left: 2px solid #a5d6a7;
+    }
+    nav.open {
+      transform: translateX(0);
     }
     nav button {
-      padding: 12px 6px;
-      flex: 1 1 50%;
-      min-width: 120px;
+      flex: none;
+      padding: 18px 20px;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #a5d6a7;
+      text-align: right;
+      white-space: nowrap;
     }
     main {
-      padding: 12px 8px;
+      padding: 12px 10px;
+      margin-right: 0;
     }
     .slider {
       width: 95vw;
@@ -332,7 +371,7 @@
   }
   @media (max-width: 400px) {
     nav button {
-      flex: 1 1 100%;
+      font-size: 1.1rem;
     }
     .honor-item {
       width: 98%;
@@ -344,8 +383,13 @@
 <div id="app" role="application" aria-label="سایت موسسه قرآنی فرهنگی آل یاسین">
 <header>
   موسسه قرآنی فرهنگی آل یاسین علیهم السلام شیراز
+  <div id="menuToggle" aria-label="دکمه منوی ناوبری" role="button" tabindex="0" aria-expanded="false" aria-controls="mainNav">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
 </header>
-<nav role="tablist" aria-label="دسته بندی مطالب موسسه">
+<nav id="mainNav" role="tablist" aria-label="دسته بندی مطالب موسسه">
   <button role="tab" aria-selected="false" aria-controls="tab-news" id="tabbtn-news" tabindex="-1" aria-label="نمایش بخش اخبار">اخبار</button>
   <button role="tab" aria-selected="true" aria-controls="tab-images" id="tabbtn-images" class="active" tabindex="0" aria-label="نمایش بخش عکس‌ها">عکس</button>
   <button role="tab" aria-selected="false" aria-controls="tab-videos" id="tabbtn-videos" tabindex="-1" aria-label="نمایش بخش فیلم‌ها">فیلم</button>
@@ -395,7 +439,7 @@
     <h2>اخبار موسسه</h2>
     <ul class="news-list" aria-label="لیست اخبار موسسه">
       <li>
-        <img src="4.jpg" alt="دوره آموزش قرآن" class="news-thumb" />
+        <img src="news1.jpg" alt="دوره آموزش قرآن" class="news-thumb" />
         باز شدن دوره جدید آموزش قرآن کریم در بهار ۱۴۰۳
       </li>
       <li>
@@ -438,6 +482,8 @@
   // Tabs control
   const tabs = document.querySelectorAll('nav button');
   const panels = document.querySelectorAll('main section');
+  const nav = document.getElementById('mainNav');
+  const menuToggle = document.getElementById('menuToggle');
 
   function activateTab(tab) {
     tabs.forEach(t => {
@@ -454,6 +500,10 @@
     if(panel){
       panel.classList.add('active');
       panel.focus();
+    }
+    // Close menu on tab activation (mobile)
+    if(nav.classList.contains('open')){
+      toggleMenu();
     }
   }
 
@@ -535,8 +585,32 @@
     clearInterval(slideTimer);
     slideTimer = setInterval(nextSlide, 4000);
   }
+
+  // Menu toggle function
+  function toggleMenu() {
+    const expanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+    menuToggle.setAttribute('aria-expanded', !expanded);
+    nav.classList.toggle('open');
+  }
+
+  menuToggle.addEventListener('click', toggleMenu);
+  menuToggle.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleMenu();
+    }
+  });
+
+  // Close menu if clicked outside (optional enhancement)
+  document.addEventListener('click', (e) => {
+    if(nav.classList.contains('open') && !nav.contains(e.target) && e.target !== menuToggle && !menuToggle.contains(e.target)) {
+      toggleMenu();
+    }
+  });
 </script>
 </body>
 </html>
 </content>
 </create_file>
+
+
