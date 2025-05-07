@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>موسسه قرآنی فرهنگی آل یاسین علیهم السلام شیراز</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&family=Almarai&display=swap');
   * {
     box-sizing: border-box;
     margin: 0; padding: 0;
@@ -34,36 +34,77 @@
   }
   header {
     background: #00695c;
-    padding: 16px 24px;
-    text-align: center;
-    font-weight: 800;
-    font-size: 1.8rem;
+    height: 64px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     color: #a3d7ca;
     letter-spacing: 1.6px;
     flex-shrink: 0;
     border-radius: 0;
     text-shadow: 0 0 5px #004d40;
     user-select: text;
-    position: relative;
+    font-family: 'Almarai', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 900;
+    animation: titleGlow 3s ease-in-out infinite;
+    text-align: center;
+    padding-left: 88px; /* space for menu button */
   }
-  /* Menu toggle button for mobile */
+
+  /* Title glow animation */
+  @keyframes titleGlow {
+    0%,100% {
+      text-shadow:
+        0 0 5px #a3d7ca,
+        0 0 20px #a3d7ca,
+        0 0 30px #80cbc4,
+        0 0 40px #004d40,
+        0 0 50px #004d40;
+      color: #a3d7ca;
+    }
+    50% {
+      text-shadow:
+        0 0 10px #7fffd4,
+        0 0 25px #7fffd4,
+        0 0 40px #40e0d0,
+        0 0 60px #20b2aa,
+        0 0 80px #008080;
+      color: #80e0d0;
+    }
+  }
+
+  /* Menu toggle button for mobile - moved right (left in display RTL) */
   #menuToggle {
     display: none;
     position: absolute;
     top: 18px;
-    left: 20px;
-    width: 32px;
-    height: 28px;
+    right: 20px; /* Right side in RTL */
+    width: 36px;
+    height: 30px;
     cursor: pointer;
     z-index: 30;
+    transition: transform 0.3s ease;
   }
   #menuToggle div {
-    width: 32px;
+    width: 36px;
     height: 4px;
     background-color: #a3d7ca;
     margin: 5px 0;
-    border-radius: 2px;
+    border-radius: 3px;
     transition: 0.4s;
+  }
+  /* Animate hamburger to X when active */
+  #menuToggle.open div:nth-child(1) {
+    transform: rotate(-45deg) translate(-8px, 8px);
+  }
+  #menuToggle.open div:nth-child(2) {
+    opacity: 0;
+  }
+  #menuToggle.open div:nth-child(3) {
+    transform: rotate(45deg) translate(-7px, -7px);
   }
 
   /* Navigation tabs */
@@ -317,9 +358,9 @@
     }
     nav {
       position: fixed;
-      top: 56px;
+      top: 64px;
       right: 0;
-      height: calc(100% - 56px);
+      height: calc(100% - 64px);
       width: 220px;
       background: #00796b;
       flex-direction: column;
@@ -590,6 +631,7 @@
   function toggleMenu() {
     const expanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
     menuToggle.setAttribute('aria-expanded', !expanded);
+    menuToggle.classList.toggle('open');
     nav.classList.toggle('open');
   }
 
@@ -610,7 +652,3 @@
 </script>
 </body>
 </html>
-</content>
-</create_file>
-
-
